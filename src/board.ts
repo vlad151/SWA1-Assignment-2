@@ -10,18 +10,18 @@ export type Match<T> = {
     positions: Position[]
 }
 
-export type BoardEvent<T> = ?;
+export type BoardEvent<T> =any
 
-export type BoardListener<T> = ?;
+export type BoardListener<T>=any
 
 export class Board<T> {
     addListener(listener: BoardListener<T>) {
     }
 
-    piece(p: Position): T | undefined {
+    piece(p: Position): any {
     }
 
-    canMove(first: Position, second: Position): boolean {
+    canMove(first: Position, second: Position): any {
     }
     
     move(first: Position, second: Position) {
