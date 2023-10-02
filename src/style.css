@@ -1,6 +1,10 @@
 body{
     font-family: Arial, Helvetica, sans-serif;
 }
+h1{
+    display: flex;
+    justify-content: center;
+}
 #grid-container{
     display: flex;
     flex-direction: column;
@@ -12,14 +16,17 @@ body{
 .grid-row{
 display: flex;
 height: 70px;
+margin: 1px;
 
 }
 .grid-col{
     width: 70px;
     height: 70px;
     display: inline-block;
-
+    margin: 1px;
     padding: 10px;
     box-sizing: border-box;
     border: 1px solid black;
+    border-radius: 5px;
+    background-color: antiquewhite;
 }
