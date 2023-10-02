@@ -1,0 +1,25 @@
+body{
+    font-family: Arial, Helvetica, sans-serif;
+}
+#grid-container{
+    display: flex;
+    flex-direction: column;
+    
+    align-items: center;    
+    width: 100%;
+    padding: 10px;
+}
+.grid-row{
+display: flex;
+height: 70px;
+
+}
+.grid-col{
+    width: 70px;
+    height: 70px;
+    display: inline-block;
+
+    padding: 10px;
+    box-sizing: border-box;
+    border: 1px solid black;
+}
