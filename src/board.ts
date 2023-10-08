@@ -12,8 +12,7 @@ export type Match<T> = {
 }
 
 export type BoardEvent<T> = {
-    type: "move",
-    kind: "Match",
+    kind: "Match" | "Refill",
     first: Position,
     second: Position,
     match: Match<T>
@@ -51,7 +50,7 @@ export class Board<T> {
         for (let row = 0; row < this.height; row++) {
           for (let col = 0; col < this.width; col++) {
             positions.push({ row, col });
-          }
+          } 
         }
         return positions;
     }
@@ -62,22 +61,58 @@ export class Board<T> {
         }
         return undefined;
       }
-
+//checks if the position is inside the board
       private isValidPosition(p: Position): boolean {
         return p.row >= 0 && p.row < this.height && p.col >= 0 && p.col < this.width;
       }
 
 
       canMove(first: Position, second: Position): boolean {
-        if (!this.isValidPosition(first) || !this.isValidPosition(second)) {
-          return false;
+        if (this.isValidPosition(first) && this.isValidPosition(second)) {
+          if(first.row !== second.row || first.col !== second.col){
+          
+           let boardCopy = this.board
+
+            //check if there is a match after the swap
+          return this.hasMatch(this.swap(boardCopy, first, second))
+              
+            
+
         }}
+        return false
+      }
+      private swap(board:T[][], first: Position, second: Position):T[][] {
+        console.log(" before swap",board)
+        console.log(first, "first")
+        console.log(second, "second")
+        //swaps the two positions 
+        let tempFirstPosition = board[first.row][first.col];
+        board[first.row][first.col] = board[second.row][second.col];
+        board[second.row][second.col] = tempFirstPosition;
+
+        console.log("swap",board)
+        return board
+
+      }
+      private hasMatch(board:T[][]):boolean{
+        for(let row = 0; row < this.height; row++){
+          for(let col = 0; col < this.width; col++){
+            if(board[row][col+1] && board[row][col+2]){
+            if(board[row][col] === board[row][col+1] && board[row][col] === board[row][col+2]){
+              return true
+            }}
+            if(board[row+1] && board[row+2]){
+            if(board[row][col] === board[row+1][col] && board[row][col] === board[row+2][col]){
+              return true
+            }}
+          }
+        }
+        return false
+      }
     
      move(first: Position, second: Position) {
-    if (this.canMove(first, second)) {
-      const temp = this.board[first.row][first.col];
-      this.board[first.row][first.col] = this.board[second.row][second.col];
-      this.board[second.row][second.col] = temp;
+      if (this.canMove(first, second)) {
+
 
     }
   }
