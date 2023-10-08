@@ -51,7 +51,7 @@ export class Board<T> {
         for (let row = 0; row < this.height; row++) {
           for (let col = 0; col < this.width; col++) {
             positions.push({ row, col });
-          }
+          } 
         }
         return positions;
     }
@@ -69,9 +69,12 @@ export class Board<T> {
 
 
       canMove(first: Position, second: Position): boolean {
-        if (!this.isValidPosition(first) || !this.isValidPosition(second)) {
-          return false;
+        if (this.isValidPosition(first) && this.isValidPosition(second)) {
+          if( (Math.abs(first.row - second.row) === 1 && first.col === second.col) || (Math.abs(first.col - second.col) === 1 && first.row === second.row)){
+          return true
         }}
+        return false
+      }
     
      move(first: Position, second: Position) {
     if (this.canMove(first, second)) {
