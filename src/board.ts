@@ -12,8 +12,7 @@ export type Match<T> = {
 }
 
 export type BoardEvent<T> = {
-    type: "move",
-    kind: "Match",
+    kind: "Match" | "Refill",
     first: Position,
     second: Position,
     match: Match<T>
@@ -75,8 +74,10 @@ export class Board<T> {
            let boardCopy = this.board
 
             //check if there is a match after the swap
-           this.hasMatch(this.swap(boardCopy, first, second))
-           console.log("has match",this.hasMatch(this.swap(boardCopy, first, second)))
+            console.log("has match",this.hasMatch(this.swap(boardCopy, first, second)))
+
+
+          return this.hasMatch(this.swap(boardCopy, first, second))
               
             
 
