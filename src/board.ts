@@ -74,9 +74,6 @@ export class Board<T> {
            let boardCopy = this.board
 
             //check if there is a match after the swap
-            console.log("has match",this.hasMatch(this.swap(boardCopy, first, second)))
-
-
           return this.hasMatch(this.swap(boardCopy, first, second))
               
             
