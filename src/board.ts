@@ -13,6 +13,7 @@ export type Match<T> = {
 
 export type BoardEvent<T> = {
     type: "move",
+    kind: "Match",
     first: Position,
     second: Position,
     match: Match<T>
