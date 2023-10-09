@@ -1,0 +1,26 @@
+td{
+    border: 1px solid black;
+    border-radius: 10px;
+    cursor: pointer;
+    padding: 2px;
+}
+td:hover{
+    transform: scale(1.1);
+    transition: 0.3s;
+}
+body{
+    font-family: "Lucida Console", Courier, monospace;
+
+}
+h1{
+    margin-top: 100px;
+    text-align: center;
+}
+#base{
+display: flex;
+justify-content: center;
+}
+img{
+    width: auto;
+    height: 70px;
+}

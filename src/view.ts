@@ -39,11 +39,14 @@ export class View<T> {
         if (this.table === undefined) {
             this.board = []
             this.table = this.createChild(this.base, 'table') as HTMLTableElement
+            this.table.id="table"
             for(let i = 0; i < model.board.height; i++) {
                 const row = this.createChild(this.table, 'tr')
                 const tds: HTMLElement[] = []
                 for(let j = 0; j < model.board.width; j++) {
                     const cell = this.createChild(row, 'td')
+                    cell.className = 'tile'
+                    cell.id=`tile${i}${j}`
                     tds.push(cell)
                     cell.onclick = (_) => this.controller.click({row: i, col: j})
                 }

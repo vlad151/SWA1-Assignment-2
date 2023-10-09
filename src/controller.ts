@@ -19,6 +19,7 @@ export class Controller<T> {
           this.model.move(first, second)
         } else {
           this.model.addMessage("Can't move")
+          document.getElementById("messageContainer").innerHTML="Can't move"
         }
         this.model.unselect(first)
         this.model.unselect(second)
