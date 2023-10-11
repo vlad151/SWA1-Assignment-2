@@ -10,16 +10,14 @@ export type Match<T> = {
   positions: Position[];
 };
 
-export type BoardEvent<T> =
-  | { kind: "Match"; match: Match<T> }
-  | { kind: "Refill" };
+export type BoardEvent<T> = { kind: "Match"; match: Match<T> } | { kind: "Refill" };
 
 export type BoardListener<T> = (event: BoardEvent<T>) => void;
 
 export class Board<T> {
   readonly width: number;
   readonly height: number;
-  private board: (T | undefined)[][]; // 2D array to represent the board
+  public board: (T | undefined)[][]; // 2D array to represent the board
   private listeners: BoardListener<T>[] = [];
   private generator: Generator<T>;
 
@@ -130,7 +128,7 @@ export class Board<T> {
     return matchedPositions;
   }
 
-  handleMatches() {
+/*   handleMatches() {
     const matches: Match<T>[] = [];
 
     // 1. Detect matches
@@ -179,7 +177,75 @@ export class Board<T> {
     if (matches.length > 0) {
         this.listeners.forEach((listener) => listener({ kind: "Refill" }));
     }
+  } */
+
+  handleMatches() {
+    let foundNewMatches = false;
+  
+    do {
+      const matches: Match<T>[] = [];
+  
+      // 1. Detect matches
+      this.positions().forEach((position) => {
+        const matchedPositions = this.checkForMatch(position, this.board);
+        if (matchedPositions.length) {
+          const tile = this.board[position.row][position.col];
+          if (tile) {
+            matches.push({ matched: tile, positions: matchedPositions });
+          }
+        }
+      });
+  
+      // If no matches are found, break out of the loop
+      if (matches.length === 0) {
+        break;
+      }
+  
+      foundNewMatches = true;
+  
+      // 2. Remove matched tiles and notify listeners
+      matches.forEach((match) => {
+        match.positions.forEach((position) => {
+          this.board[position.row][position.col] = undefined;
+        });
+        this.listeners.forEach((listener) => listener({ kind: "Match", match }));
+      });
+  
+      // 3. Drop tiles from above
+      for (let col = 0; col < this.width; col++) {
+        let emptyRow = this.height - 1;
+        for (let row = this.height - 1; row >= 0; row--) {
+          if (!this.board[row][col]) {
+            continue;
+          }
+          if (row !== emptyRow) {
+            this.board[emptyRow][col] = this.board[row][col];
+            this.board[row][col] = undefined;
+          }
+          emptyRow--;
+        }
+      }
+  
+      // 4. Generate new tiles
+      for (let row = 0; row < this.height; row++) {
+        for (let col = 0; col < this.width; col++) {
+          if (!this.board[row][col]) {
+            this.board[row][col] = this.generator.next();
+          }
+        }
+      }
+
+    
+      this.listeners.forEach((listener) => listener({ kind: "Refill" }));
+    
+
+
+
+    } while (foundNewMatches);
+  
+ 
   }
+  
 
   private isValidPosition(position: Position): boolean {
     return (
