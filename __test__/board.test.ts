@@ -105,7 +105,7 @@ describe("Board", () => {
     })
 
     describe("moves", () => {
-        describe("valid moves", () => {
+         describe("valid moves", () => {
             const generator = new GeneratorFake<String>(
                 'A', 'B', 'A', 'C',
                 'D', 'C', 'A', 'C',
@@ -218,6 +218,7 @@ describe("Board", () => {
             it("fires multiple events when both pieces make new matches", () => {
                 generator.prepare('C', 'D', 'A')
                 generator.prepare('B', 'A', 'B')
+                generator.prepare('X', 'Y', 'Z')
                 board.move({row: 3, col: 2}, {row: 3, col: 0})
                 expect(events).toContainEqual(
                     {kind: 'Match', match: {matched: 'C', positions: [{row: 1, col: 2}, {row: 2, col: 2}, {row: 3, col: 2}]}}
@@ -280,14 +281,16 @@ describe("Board", () => {
                 ).withPieces('B', 'C', 'D')
             })
             it("shifts tiles down before replacing multiple matches", () => {
-                generator.prepare('D', 'B', 'C', 'A', 'B', 'A')
+                generator.prepare('D', 'B', 'C', 'Z', 'X', 'Z')
+                generator.prepare('X', 'Y', 'Z')
                 board.move({row: 3, col: 0}, {row: 3, col: 2})
+                
                 require(board).toMatch(
                     '*', 'B', '*',
                     '*', 'B', '*',
                     '*', 'A', '*',
                     'A', 'D', 'A',
-                ).withPieces('A', 'A', 'B', 'B', 'C', 'D')
+                ).withPieces('B', 'C', 'D', 'X', 'Z', 'Z')
             })
             it("only deletes a double match once", () => {
                 generator = new GeneratorFake<String>(
@@ -297,14 +300,14 @@ describe("Board", () => {
                     'C', 'B', 'D',
                 )
                 board = new Board(generator, 3, 4)
-                generator.prepare('D', 'C', 'B', 'B', 'A')
+                generator.prepare('D', 'C', 'B', 'B', 'A','X', 'Y','Z')
                 board.move({row: 0, col: 1}, {row: 2, col: 1})
                 require(board).toMatch(
                     '*', '*', '*',
-                    'D', '*', 'A',
-                    'D', '*', 'C',
+                    'Y', '*', 'A',
+                    'Z', '*', 'C',
                     'C', 'A', 'D',
-                ).withPieces('A', 'B', 'B', 'C', 'D')
+                ).withPieces('A', 'B', 'B', 'C', 'X')
             })
         })
 
@@ -337,7 +340,7 @@ describe("Board", () => {
                 board.move({row: 3, col: 3}, {row: -1, col: 3})
                 expect(events).toEqual([])
             })
-        })
+        }) 
 
         describe("Cascading", () => {
             let events: BoardEvent<String>[]
@@ -358,8 +361,8 @@ describe("Board", () => {
 
             it("registers if refilling brings new matches", () => {
                 generator.prepare('B', 'C', 'C')
-                generator.prepare('A', 'A', 'D')
-                board.move({row: 0, col: 1}, {row: 2, col: 1})
+                generator.prepare('A', 'A', 'D')               
+                board.move({row: 0, col: 1}, {row: 2, col: 1})               
                 expect(events).toEqual([
                     {kind: 'Match', match: {matched: 'A', positions: [{row: 0, col: 0}, {row: 0, col: 1}, {row: 0, col: 2}]}},
                     {kind: 'Refill'},
@@ -368,7 +371,7 @@ describe("Board", () => {
                 ])
             })
 
-            it("iterates until there are no new matches", () => {
+             it("iterates until there are no new matches", () => {
                 generator.prepare('B', 'C', 'C')
                 generator.prepare('A', 'A', 'A')
                 generator.prepare('A', 'A', 'D')
@@ -381,7 +384,7 @@ describe("Board", () => {
                     {kind: 'Match', match: {matched: 'A', positions: [{row: 0, col: 2}, {row: 1, col: 2}, {row: 2, col: 2}]}},
                     {kind: 'Refill'},
                 ])
-            })
+            }) 
         })
     })
 })
