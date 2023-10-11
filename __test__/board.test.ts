@@ -105,7 +105,7 @@ describe("Board", () => {
     })
 
     describe("moves", () => {
-        describe("valid moves", () => {
+         describe("valid moves", () => {
             const generator = new GeneratorFake<String>(
                 'A', 'B', 'A', 'C',
                 'D', 'C', 'A', 'C',
@@ -340,7 +340,7 @@ describe("Board", () => {
                 board.move({row: 3, col: 3}, {row: -1, col: 3})
                 expect(events).toEqual([])
             })
-        })
+        }) 
 
         describe("Cascading", () => {
             let events: BoardEvent<String>[]
@@ -361,10 +361,8 @@ describe("Board", () => {
 
             it("registers if refilling brings new matches", () => {
                 generator.prepare('B', 'C', 'C')
-                generator.prepare('A', 'A', 'D')
-                console.table(board.board)
-                board.move({row: 0, col: 1}, {row: 2, col: 1})
-                console.table(board.board)
+                generator.prepare('A', 'A', 'D')               
+                board.move({row: 0, col: 1}, {row: 2, col: 1})               
                 expect(events).toEqual([
                     {kind: 'Match', match: {matched: 'A', positions: [{row: 0, col: 0}, {row: 0, col: 1}, {row: 0, col: 2}]}},
                     {kind: 'Refill'},
@@ -373,7 +371,7 @@ describe("Board", () => {
                 ])
             })
 
-            it("iterates until there are no new matches", () => {
+             it("iterates until there are no new matches", () => {
                 generator.prepare('B', 'C', 'C')
                 generator.prepare('A', 'A', 'A')
                 generator.prepare('A', 'A', 'D')
@@ -386,7 +384,7 @@ describe("Board", () => {
                     {kind: 'Match', match: {matched: 'A', positions: [{row: 0, col: 2}, {row: 1, col: 2}, {row: 2, col: 2}]}},
                     {kind: 'Refill'},
                 ])
-            })
+            }) 
         })
     })
 })
