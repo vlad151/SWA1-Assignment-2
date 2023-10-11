@@ -179,7 +179,7 @@ export class Board<T> {
     }
   } */
 
-  handleMatches() {
+/*   handleMatches() {
     let foundNewMatches = false;
   
     do {
@@ -244,8 +244,66 @@ export class Board<T> {
     } while (foundNewMatches);
   
  
-  }
+  } */
   
+
+  handleMatches() {
+    let foundMatch = false;
+
+    do {
+        const matches: Match<T>[] = [];
+
+        // 1. Detect matches
+        this.positions().forEach((position) => {
+            const matchedPositions = this.checkForMatch(position, this.board);
+            if (matchedPositions.length) {
+                const tile = this.board[position.row][position.col];
+                if (tile) {
+                    matches.push({ matched: tile, positions: matchedPositions });
+                }
+            }
+        });
+
+        // 2. Remove matched tiles and notify listeners
+        matches.forEach((match) => {
+            match.positions.forEach((position) => {
+                this.board[position.row][position.col] = undefined;
+            });
+            this.listeners.forEach((listener) => listener({ kind: "Match", match }));
+        });
+
+        // 3. Drop tiles from above
+        for (let col = 0; col < this.width; col++) {
+            let emptyRow = this.height - 1;
+            for (let row = this.height - 1; row >= 0; row--) {
+                if (!this.board[row][col]) {
+                    continue;
+                }
+                if (row !== emptyRow) {
+                    this.board[emptyRow][col] = this.board[row][col];
+                    this.board[row][col] = undefined;
+                }
+                emptyRow--;
+            }
+        }
+
+        // 4. Generate new tiles
+        for (let row = 0; row < this.height; row++) {
+            for (let col = 0; col < this.width; col++) {
+                if (!this.board[row][col]) {
+                    this.board[row][col] = this.generator.next();
+                }
+            }
+        }
+
+        if (matches.length > 0) {
+            foundMatch = true;
+            this.listeners.forEach((listener) => listener({ kind: "Refill" }));
+        } else {
+            foundMatch = false;
+        }
+    } while (foundMatch);
+}
 
   private isValidPosition(position: Position): boolean {
     return (
